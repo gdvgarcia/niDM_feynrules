@@ -1,0 +1,47 @@
+pseudo-Dirac fermionic DM with Two Mediators - pDFDM2M
+ Parameters
+  Name         | Value       |> Comment                                                                <|
+aEWM1          |127.9        |Inverse of the EW coupling constant at the Z pole                         |
+Gf             |0.0000116637 |Fermi constant                                                            |
+aS             |0.1184       |Strong coupling constant at the Z pole                                    |
+ymdo           |0.00504      |Down Yukawa mass                                                          |
+ymup           |0.00255      |Up Yukawa mass                                                            |
+yms            |0.101        |Strange Yukawa mass                                                       |
+ymc            |1.27         |Charm Yukawa mass                                                         |
+ymb            |4.7          |Bottom Yukawa mass                                                        |
+ymt            |172          |Top Yukawa mass                                                           |
+yme            |0.000511     |Electron Yukawa mass                                                      |
+ymm            |0.10566      |Muon Yukawa mass                                                          |
+ymtau          |1.777        |Tau Yukawa mass                                                           |
+cabi           |0.227736     |Cabibbo angle                                                             |
+gch            |0.01         |Dark gauge coupling                                                       |
+thetahs        |0.001        |Dark scalar - Higgs mixing angle                                          |
+epsilon        |0.001        |Z' and Hyper charge vector boson kinetic mixing                           |
+MchBar2        |0.304236     |Dark fermions average of squared masses                                   |
+DMchBar2       |0.225053     |Dark fermions difference of squared masses  divided by 2                  |
+ychL           |0.002        |Dark scalar - dark fermion left coupling                                  |
+ychR           |0.05         |Dark scalar - dark fermion right coupling                                 |
+GG             |1.21977796370|Strong coupling constant at the Z pole   This value will be ignored and ca|
+MZ             |91.1876      |Mass of G0.                                                               |
+MZp            |0.09         |Mass of DG0.                                                              |
+Me             |0.000511     |Mass of e.                                                                |
+MMU            |0.10566      |Mass of mu.                                                               |
+MTA            |1.777        |Mass of ta.                                                               |
+MU             |0.00255      |Mass of u.                                                                |
+MC             |1.27         |Mass of c.                                                                |
+MT             |172          |Mass of t.                                                                |
+MD             |0.00504      |Mass of d.                                                                |
+MS             |0.101        |Mass of s.                                                                |
+MB             |4.7          |Mass of b.                                                                |
+MH1            |125          |Mass of H1.                                                               |
+MH2            |0.09         |Mass of H2.                                                               |
+%WZ            |2.4952       |Width of G0.                                                              |
+%WW            |2.085        |Width of GP.                                                              |
+%WZhp          |0            |Width of Zhp.                                                             |
+%WT            |1.50833649   |Width of t.                                                               |
+%WH1           |0.00407      |Width of H1.                                                              |
+%WH2           |0            |Width of H2.                                                              |
+%Wch1          |0            |Width of ch1.                                                             |
+%Wch2          |0            |Width of ch2.                                                             |
+E              |2.71828182845|The base of the natural logarithm.                                        |
+Pi             |3.14159265358|The circumference of a circle divided by the diameter.                    |
