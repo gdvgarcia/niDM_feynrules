@@ -1,0 +1,251 @@
+
+M$ModelName = ": generic not-so-inelastic Dark Matter (generic niDM)";
+
+M$Information = {
+          Authors 	    -> "G. Dalla Valle Garcia",
+          Version 	    -> "1.0",
+          Date 		      -> "01. 12. 2022",
+          Institutions  -> "Karlsruher Institut für Technologie / IAP",
+          Emails 	      -> "giovani.garica@student.kit.edu"
+  	  URLs         -> "https://github.com/gdvgarcia/niDM_feynrules"
+};
+
+FeynmanGauge = False;
+
+(********** Index definition *********)
+IndexRange[Index[DarkGeneration]] = Range[2]
+
+IndexStyle[DarkGeneration, d];
+
+
+(***** Parameter list ******)
+M$Parameters = {
+
+  (* External parameters *)
+  deltaychRL == {
+    ParameterType    	-> External,
+    Value 		        -> 0.00001,
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Delta - normalized difference of dark scalar - dark fermion right and left coupling"
+  },
+  phdi == {
+    ParameterType    	-> External,
+    Value 		        -> 0,
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Complex phase of the Dirac mass of the dark fermion"
+  },
+
+
+  (* Internal parameters *)
+  ls == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> (1 / (4 * dvev^2)) * (MH1^2 + MH2^2 + (MH2^2 - MH1^2) * Cos[2 * thetahs]) ,
+    InteractionOrder 	-> {DS, 2},
+    Description       -> "Dark scalar quartic coupling"
+  },
+  mussq == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> ls dvev^2 + (1/2) * lhs * vev^2,
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Dark scalar quadratic coupling"
+  },
+  MchBar2 == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		    	-> ( Mch1^2 + Mch2^2 )/2.,
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Dark fermions average of squared masses "
+  },
+  DMchBar2 == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 			    -> ( Mch1^2 - Mch2^2 )/2.,
+    InteractionOrder 	-> {DS, 0},
+    Description         -> "Dark fermions difference of squared masses  divided by 2"
+  },
+  ychL == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> (Mch1 - Mch2)/(2. * dvev * (2. + deltaychRL) ) ,
+    InteractionOrder 	-> {DS, 1},
+    Description       -> "Dark scalar - dark fermion left coupling"
+  },
+  ychR == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> ychL * (1 + deltaychRL),
+    InteractionOrder 	-> {DS, 1},
+    Description       -> "Dark scalar - dark fermion right coupling"
+  },
+  Mdi == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		  	    -> Sqrt[ MchBar2 - 2 * dvev^2 (ychR^2 + ychL^2) ],
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Absolute value of the Dirac mass of the dark fermion"
+  },
+  Deltatemp == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> ychL^2 + 2 * ychL * ychR * Cos[2 * phdi] + ychR^2,
+    InteractionOrder 	-> {DS, 2},
+    Description       -> "Temporary parameter for computation of the dark fermions masses - delta"
+  },
+  Dtemp == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> Sqrt[dvev^2 (ychR^2 - ychL^2)^2 + Mdi^2 * Deltatemp],
+    InteractionOrder 	-> {DS, 1},
+    Description       -> "Temporary parameter for computation of the dark fermions masses - D"
+  },
+  thetach == {
+    ParameterType    	-> Internal,
+    ComplexParameter  -> False,
+    Value 		        -> ArcTan[(dvev * (ychR^2 - ychL^2) + Dtemp)/(Mdi * Sqrt[Deltatemp])] ,
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Angle in the unitary rotation that diagonalize the chi masses"
+  },
+  phch == {
+    ParameterType    	-> Internal,
+    Value 		        -> carg[Cos[phdi] * (ychL + ychR) + i  * Sin[phdi] * (ychL - ychR)],
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Phase in the unitary rotation that diagonalize the chi masses"
+  },
+  gamch == {
+    ParameterType     -> Internal,
+    Indices           -> {Index[DarkGeneration]},
+    Value             -> {gamch[1] -> carg[ (Dtemp + dvev (ychL^2 + 2 (Cos[2 * phdi] - i  * Sin[2 * phdi]) ychL ychR + ychR^2))/(ychL +
+(Cos[2 * phdi] - i  * Sin[2 * phdi]) ychR) ] ,
+                          gamch[2] -> carg[ (-Dtemp + dvev (ychL^2 + 2 (Cos[2 * phdi] - i  * Sin[2 * phdi]) ychL ychR + ychR^2))/(
+(Cos[2 * phdi] - i  * Sin[2 * phdi]) ychL + ychR) ] },
+    TeX               -> Superscript[\[Gamma],ch],
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Phase of the \\masses// after the unitary rotation"
+  },
+  alphch == {
+    ParameterType     -> Internal,
+    ComplexParameter  -> False,
+    Indices           -> {Index[DarkGeneration], Index[DarkGeneration]},
+    Value             -> {alphch[1,1] -> 0,  alphch[1,2] -> Sin[(2*phch + gamch[1] - gamch[2])/2] * Sin[2*thetach],
+                          alphch[2,1] -> - Sin[(2*phch + gamch[1] - gamch[2])/2] * Sin[2*thetach], alphch[2,2] -> 0 },
+    TeX               -> \[Alpha],
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Vector coupling Z' - chi"
+  },
+  betach == {
+    ParameterType     -> Internal,
+    ComplexParameter  -> False,
+    Indices           -> {Index[DarkGeneration], Index[DarkGeneration]},
+    Value             -> {betach[1,1] -> - Cos[2*thetach],  betach[1,2] -> Cos[(2*phch + gamch[1] - gamch[2])/2] * Sin[2*thetach],
+                          betach[2,1] -> Cos[(2*phch + gamch[1] - gamch[2])/2] * Sin[2*thetach], betach[2,2] -> Cos[2*thetach] },
+    TeX               -> \[Beta],
+    InteractionOrder 	-> {DS, 0},
+    Description       -> "Axial-Vector coupling Z' - chi"
+   },
+   halphch == {
+     ParameterType    -> Internal,
+     ComplexParameter -> False,
+     Indices          -> {Index[DarkGeneration], Index[DarkGeneration]},
+     Value            -> {halphch[1,1] -> 2 * (deltaychRL + 1) * Cos[2*phch + gamch[1]] (Sin[thetach])^2 + 2 * Cos[gamch[1]] (Cos[thetach])^2,
+                          halphch[1,2] -> Sin[2*thetach] *  ((deltaychRL + 1) * Cos[(2*phch + gamch[1] + gamch[2])/2] - Cos[(2*phch - gamch[1] - gamch[2])/2]),
+                          halphch[2,1] -> Sin[2*thetach] *  ((deltaychRL + 1) * Cos[(2*phch + gamch[1] + gamch[2])/2] - Cos[(2*phch - gamch[1] - gamch[2])/2]),
+                          halphch[2,2] -> 2 * Cos[2*phch - gamch[2]] (Sin[thetach])^2 + 2 * (deltaychRL + 1) * Cos[gamch[2]] (Cos[thetach])^2 },
+     TeX              -> Superscript[\[Alpha],hat],
+     InteractionOrder -> {DS, 0},
+     Description      -> "Scalar coupling Sd - chi"
+    },
+    hbetach == {
+     ParameterType    -> Internal,
+     ComplexParameter -> False,
+     Indices          -> {Index[DarkGeneration], Index[DarkGeneration]},
+     Value            -> {hbetach[1,1] -> 2 * (deltaychRL + 1) * Sin[2*phch + gamch[1]] (Sin[thetach])^2 + 2 * Sin[gamch[1]] (Cos[thetach])^2,
+                          hbetach[1,2] -> Sin[2*thetach] *  ((deltaychRL + 1) * Sin[(2*phch + gamch[1] + gamch[2])/2] + Sin[(2*phch - gamch[1] - gamch[2])/2]),
+                          hbetach[2,1] -> Sin[2*thetach] *  ((deltaychRL + 1) * Sin[(2*phch + gamch[1] + gamch[2])/2] + Sin[(2*phch - gamch[1] - gamch[2])/2]),
+                          hbetach[2,2] -> -2 * Sin[2*phch - gamch[2]] (Sin[thetach])^2 + 2 * (deltaychRL + 1) * Sin[gamch[2]] (Cos[thetach])^2 },
+     TeX              -> Superscript[\[Beta],hat],
+     InteractionOrder -> {DS, 0},
+     Description      -> "Pseudo-scalar coupling Sd - chi"
+     }
+};
+
+
+(***** Gauge group list ******)
+M$GaugeGroups = {
+};
+
+
+(***** Particle classes list ******)
+M$ClassesDescription = {
+
+    (* Physical vector fields *)
+
+    (* Unphysical vector fields *)
+
+
+    (* Physical scalar fields *)
+
+    (* Unphysical scalar fields *)
+    S[15] == {
+      ClassName       -> Sdfnovev,
+      Unphysical      -> True,
+      SelfConjugate   -> False,
+      Definitions     -> { Sdfnovev -> (Sd + I DG0)/Sqrt[2] }
+    },
+
+
+    (* Physical fermionic fields *)
+    F[5] == {
+      ClassName        -> ch,
+      ClassMembers     -> {ch1, ch2},
+      Indices          -> {Index[DarkGeneration]},
+      SelfConjugate    -> True,
+      FlavorIndex      -> DarkGeneration,
+      Mass             -> {Mch, {Mch1,0.1}, {Mch2,0.05}},
+      PropagatorLabel  -> {"~ch", "~ch1", "~ch2"} ,
+      PropagatorType   -> S,
+      PropagatorArrow  -> None,
+      ParticleName     -> {"~ch1","~ch2"},
+      PDG              -> {54,55},
+      FullName         -> {"Ground chi", "Excited chi"}
+    }
+
+    (* Unphysical fermionic fields *)
+};
+
+
+
+(* *****   Lagrangian   ***** *)
+
+LDV := Normal[Series[Block[{mu,nu},
+  ExpandIndices[-1/4 FS[Zp,mu,nu] FS[Zp,mu,nu]   - (1/2) * (epsilon/cw) * FS[B,mu,nu] FS[Zp,mu,nu] ]], {epsilon, 0, 1}]];
+
+LDS := Normal[Series[Block[{ii, mu, feynmangaugerules},
+  feynmangaugerules = If[Not[FeynmanGauge], {DG0|G0|GP|GPbar  -> 0}, {}];
+
+  ExpandIndices[HC[DC[Sdf,mu]] DC[Sdf,mu] + mussq (HC[Sdf] Sdf) - ls (HC[Sdf] Sdf)^2 - lhs * (HC[Sdf] Sdf) *  Phibar[ii] Phi[ii]]/.feynmangaugerules
+ ], {epsilon, 0, 1}]];
+
+ LDF :=  Block[{dd,mu},
+    (I/2) * (chbar.Ga[mu].del[ch, mu]) - (1/2) * Mch[dd] * (chbar[s,dd].ch[s,dd])
+ ];
+
+ LDFV :=
+  Normal[Series[Block[{s, sp, r, dd1, dd2, mu},
+   (1/2) * gch * Zp[mu] *
+       chbar[s, dd1] . ((I * alphch[dd1, dd2] + betach[dd1, dd2]) ProjP[s, sp]
+       + (I * alphch[dd1, dd2] - betach[dd1, dd2]) ProjM[s, sp]) . Ga[mu, sp, r] . ch[r, dd2] ], {epsilon, 0, 1}]];
+
+  LDFS :=
+   Block[{s, sp, r, dd1, dd2, mu, feynmangaugerules},
+    feynmangaugerules = If[Not[FeynmanGauge], {DG0 -> 0}, {}];
+        ExpandIndices[- (1/Sqrt[2]) * ychL * Sdfnovev * chbar[s, dd1] .
+        ((halphch[dd1, dd2] + I*hbetach[dd1, dd2]) ProjP[s, r] +
+        (halphch[dd1, dd2] - I*hbetach[dd1, dd2]) ProjM[s, r]) . ch[r, dd2] ] /. feynmangaugerules
+    ];
+
+LDM:= LDV + LDS + LDF + LDFV + LDFS;
+
+
+L:= LDM + LSM;
