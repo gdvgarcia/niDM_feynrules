@@ -1,2 +1,5 @@
-ch1 corresponds to the excited state (heavier fermion)
-ch2 corresponds to the ground state (lighest fermion - usual DM if the heavy one decays fast)
+ch1 corresponds to the excited state (heavier fermion - mass Mch1) 
+ch2 corresponds to the ground state (lighest fermion ~ usual DM if the heavy one decays fast - mass Mch2)
+Zhp corresponds to the new vector boson (mass mZp)
+H1 corresponds to the SM-Higgs (mass mH1)
+H2 corresponds to the dark Higgs (mass mH2)
